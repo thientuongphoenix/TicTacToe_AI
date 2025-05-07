@@ -6,7 +6,7 @@ public class MCTSAI : MonoBehaviour
 {
     public static char myTurn = Board.TURN_X;
     public Board board;
-    public int iterationNumber = 100000;
+    public int iterationNumber = 10000;
     [HideInInspector] public TreeNode tn;
     [HideInInspector] public double[][] uctValues;
 

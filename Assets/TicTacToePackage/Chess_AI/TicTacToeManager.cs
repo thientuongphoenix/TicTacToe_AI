@@ -5,6 +5,7 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class TicTacToeManager : MonoBehaviour
 {
@@ -34,6 +35,9 @@ public class TicTacToeManager : MonoBehaviour
     private MCTSLogic mctsLogic;
 
     private bool gameOver = false;
+
+    // Thêm biến tham chiếu TextMeshProUGUI
+    public TextMeshProUGUI winnerText;
 
     private void Start()
     {
@@ -132,13 +136,15 @@ public class TicTacToeManager : MonoBehaviour
                 UpdateCellUI(mctsMove.x, mctsMove.y, "O");
                 if (CheckWin("O"))
                 {
-                    Debug.Log("MCTS (O) thắng!");
+                    Debug.Log("MCTS (O) wins!");
+                    ShowWinner("MCTS (O)");
                     gameOver = true;
                     return;
                 }
                 else if (IsBoardFull(board))
                 {
-                    Debug.Log("Hòa");
+                    Debug.Log("Draw");
+                    ShowWinner("Draw");
                     gameOver = true;
                     return;
                 }
@@ -162,6 +168,7 @@ public class TicTacToeManager : MonoBehaviour
         if (isWin)
         {
             Debug.Log("Player wins!");
+            ShowWinner("Player");
             return;
         }
 
@@ -169,6 +176,7 @@ public class TicTacToeManager : MonoBehaviour
         if (isFull)
         {
             Debug.Log("Deuce");
+            ShowWinner("Deuce");
             return;
         }
         else
@@ -198,12 +206,14 @@ public class TicTacToeManager : MonoBehaviour
         UpdateCellUI(bestMove.x, bestMove.y, "X");
         if (CheckWin("X"))
         {
-            Debug.Log("MiniMax (X) thắng!");
+            Debug.Log("MiniMax (X) wins!");
+            ShowWinner("MiniMax (X)");
             gameOver = true;
         }
         else if (IsBoardFull(board))
         {
-            Debug.Log("Hòa");
+            Debug.Log("Draw");
+            ShowWinner("Draw");
             gameOver = true;
         }
         else
@@ -564,6 +574,15 @@ public class TicTacToeManager : MonoBehaviour
         else if (symbol == "O")
         {
             image.color = Color.blue;
+        }
+    }
+
+    // Thêm hàm hiển thị người thắng
+    public void ShowWinner(string winnerName)
+    {
+        if (winnerText != null)
+        {
+            winnerText.text = winnerName + " Win!";
         }
     }
 }
