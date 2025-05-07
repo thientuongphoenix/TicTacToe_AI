@@ -25,6 +25,11 @@ public class TicTacToeManager : MonoBehaviour
     private readonly int[] dx = { 1, 0, 1, 1 };
     private readonly int[] dy = { 0, 1, 1, -1 };
 
+    // Thêm enum chế độ chơi
+    public enum GameMode { PlayerVsAI, AIVsAI }
+    public GameMode currentMode = GameMode.PlayerVsAI;
+    public bool isMiniMaxTurn = true;
+
     private void Start()
     {
         CreateBoard();
@@ -51,9 +56,55 @@ public class TicTacToeManager : MonoBehaviour
         }
     }
 
+    // Thêm các hàm chuyển chế độ và reset
+    public void SetPlayerVsAIMode()
+    {
+        currentMode = GameMode.PlayerVsAI;
+        isPlayerTurn = true;
+        ResetGame();
+    }
+
+    public void SetAIVsAIMode()
+    {
+        currentMode = GameMode.AIVsAI;
+        isMiniMaxTurn = true; // MiniMax đi trước
+        isPlayerTurn = false;
+        ResetGame();
+        Invoke(nameof(HandleAIMove), 0.5f);
+    }
+
+    public void ResetGame()
+    {
+        // Comment code cũ nếu có, sau đó reset lại bàn cờ, trạng thái, UI...
+        // ...
+    }
+
+    // Hàm xử lý lượt AI khi ở chế độ AI vs AI
+    void HandleAIMove()
+    {
+        if (currentMode == GameMode.AIVsAI)
+        {
+            if (isMiniMaxTurn)
+            {
+                // Gọi MiniMax (giữ nguyên code PlayerAIMove)
+                PlayerAIMove();
+            }
+            else
+            {
+                // TODO: Gọi MCTS ở đây (sẽ bổ sung sau)
+            }
+            isMiniMaxTurn = !isMiniMaxTurn;
+            // Kiểm tra kết thúc game, nếu chưa thì tiếp tục gọi AI
+            // (giả sử có biến gameOver, nếu chưa có sẽ bổ sung sau)
+            // if (!gameOver)
+            Invoke(nameof(HandleAIMove), 0.5f);
+        }
+    }
+
     //Hàm xử lý khi người chơi nhấn và ô
     public void HandlePlayerMove(int row, int column)
     {
+        if (currentMode == GameMode.AIVsAI) return; // Chặn thao tác người khi AI vs AI
         if (!isPlayerTurn || board[row, column] != null) return;
         //Cập nhật trạng thái bàn cờ
         board[row, column] = "O";
