@@ -30,9 +30,16 @@ public class TicTacToeManager : MonoBehaviour
     public GameMode currentMode = GameMode.PlayerVsAI;
     public bool isMiniMaxTurn = true;
 
+    // Thêm biến tham chiếu MCTSLogic
+    private MCTSLogic mctsLogic;
+
+    private bool gameOver = false;
+
     private void Start()
     {
         CreateBoard();
+        Board.BoardSize = boardSize;
+        mctsLogic = new MCTSLogic(); // Khởi tạo MCTSLogic
     }
 
     void CreateBoard()
@@ -75,29 +82,69 @@ public class TicTacToeManager : MonoBehaviour
 
     public void ResetGame()
     {
-        // Comment code cũ nếu có, sau đó reset lại bàn cờ, trạng thái, UI...
-        // ...
+        // Reset lại trạng thái bàn cờ
+        for (int i = 0; i < boardSize; i++)
+        {
+            for (int j = 0; j < boardSize; j++)
+            {
+                board[i, j] = null;
+            }
+        }
+        // Reset UI các ô
+        foreach (var cell in cells)
+        {
+            cell.SetSymbol("");
+            var image = cell.GetComponent<UnityEngine.UI.Image>();
+            image.color = Color.white;
+        }
+        // Reset trạng thái lượt đi
+        isPlayerTurn = (currentMode == GameMode.PlayerVsAI);
+        isMiniMaxTurn = true;
+        gameOver = false;
+        // Có thể reset thêm các biến khác nếu cần
     }
 
     // Hàm xử lý lượt AI khi ở chế độ AI vs AI
     void HandleAIMove()
     {
-        if (currentMode == GameMode.AIVsAI)
+        if (currentMode == GameMode.AIVsAI && !gameOver)
         {
             if (isMiniMaxTurn)
             {
-                // Gọi MiniMax (giữ nguyên code PlayerAIMove)
                 PlayerAIMove();
             }
             else
             {
-                // TODO: Gọi MCTS ở đây (sẽ bổ sung sau)
+                char[][] mctsBoard = MCTSLogic.ConvertToMCTSBoard(board);
+                int pieceNumber = MCTSLogic.CountStones(mctsBoard);
+                Point lastOPos = null;
+                Point lastXPos = null;
+                for (int i = 0; i < boardSize; i++)
+                {
+                    for (int j = 0; j < boardSize; j++)
+                    {
+                        if (board[i, j] == "O") lastOPos = new Point(i, j);
+                        if (board[i, j] == "X") lastXPos = new Point(i, j);
+                    }
+                }
+                Vector2Int mctsMove = mctsLogic.GetBestMove(mctsBoard, 'O', pieceNumber, lastXPos, lastOPos);
+                board[mctsMove.x, mctsMove.y] = "O";
+                UpdateCellUI(mctsMove.x, mctsMove.y, "O");
+                if (CheckWin("O"))
+                {
+                    Debug.Log("MCTS (O) thắng!");
+                    gameOver = true;
+                    return;
+                }
+                else if (IsBoardFull(board))
+                {
+                    Debug.Log("Hòa");
+                    gameOver = true;
+                    return;
+                }
             }
             isMiniMaxTurn = !isMiniMaxTurn;
-            // Kiểm tra kết thúc game, nếu chưa thì tiếp tục gọi AI
-            // (giả sử có biến gameOver, nếu chưa có sẽ bổ sung sau)
-            // if (!gameOver)
-            Invoke(nameof(HandleAIMove), 0.5f);
+            if (!gameOver) Invoke(nameof(HandleAIMove), 0.5f);
         }
     }
 
@@ -135,13 +182,8 @@ public class TicTacToeManager : MonoBehaviour
     void PlayerAIMove()
     {
         int stoneCount = CountStones(board);
-
-        //Độ sâu tối đa
         int depth = stoneCount < 10 ? 4 : 3;
-
-        //Kiểm tra ngay lập tức có thắng hay không
         var immediateMove = FindImmediateMove();
-
         Vector2Int bestMove;
         if(immediateMove != Vector2Int.one * -1)
         {
@@ -152,21 +194,21 @@ public class TicTacToeManager : MonoBehaviour
             var(move, _) = Minimax(board, depth, true, int.MinValue, int.MaxValue);
             bestMove = move;
         }
-        board[bestMove.x, bestMove.y] = "X"; //Cập nhật bàn cờ
-        UpdateCellUI(bestMove.x, bestMove.y, "X"); //Cập nhật giao diện
-
-        // kiểm tra máy có thắng hay không
+        board[bestMove.x, bestMove.y] = "X";
+        UpdateCellUI(bestMove.x, bestMove.y, "X");
         if (CheckWin("X"))
         {
-            Debug.Log("Máy thắng");
+            Debug.Log("MiniMax (X) thắng!");
+            gameOver = true;
         }
         else if (IsBoardFull(board))
         {
             Debug.Log("Hòa");
+            gameOver = true;
         }
         else
         {
-            isPlayerTurn = true; // đến lượt người chơi
+            isPlayerTurn = true;
         }
     }
 

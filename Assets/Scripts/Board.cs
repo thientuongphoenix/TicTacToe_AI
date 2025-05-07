@@ -4,8 +4,11 @@ using System.Collections;
 
 public class Board : MonoBehaviour
 {
-    public const int BOARD_SIZE = 3;
-    public const int INROW = 3;
+    public static int BoardSize = BOARD_SIZE; // Cho phép ghi đè
+    public const int BOARD_SIZE = 10;
+    //public static int BOARD_SIZE = 10;
+    public const int INROW = 5;
+    //public static int INROW = 5;
     public const char TURN_X = '1';
     public const char TURN_O = '2';
 
@@ -52,17 +55,17 @@ public class Board : MonoBehaviour
         result = RESULT_NONE;
 
         //init boardState
-        boardState = new char[BOARD_SIZE][];
+        boardState = new char[BoardSize][];
         for (int i = 0; i < boardState.Length; i++)
         {
-            boardState[i] = new char[BOARD_SIZE];
+            boardState[i] = new char[BoardSize];
             for (int j = 0; j < boardState[i].Length; j++)
             {
                 boardState[i][j] = Square.SQUARE_EMPTY;
             }
         }
 
-        winningPoints = new Point[3];
+        winningPoints = new Point[BoardSize];
 
         foreach(Square square in GetComponentsInChildren<Square>())
         {
@@ -170,7 +173,7 @@ public class Board : MonoBehaviour
         {
             result = (currTurn == Square.SQUARE_X ? RESULT_X : RESULT_O);
         }
-        else if (pieceNumber == BOARD_SIZE * BOARD_SIZE)
+        else if (pieceNumber == BoardSize * BoardSize)
         {
             result = RESULT_DRAW;
         }
@@ -179,56 +182,84 @@ public class Board : MonoBehaviour
 
     public bool isHor(char currTurn, int lastY)
     {
-        bool result = boardState[0][lastY] == currTurn
-                        && boardState[1][lastY] == currTurn
-                        && boardState[2][lastY] == currTurn;
+        bool result = true;
+        for (int i = 0; i < BoardSize; i++)
+        {
+            if (boardState[i][lastY] != currTurn)
+            {
+                result = false;
+                break;
+            }
+        }
         if (result)
         {
-            winningPoints[0] = new Point(0, lastY);
-            winningPoints[1] = new Point(1, lastY);
-            winningPoints[2] = new Point(2, lastY);
+            for (int i = 0; i < BoardSize; i++)
+            {
+                winningPoints[i] = new Point(i, lastY);
+            }
         }
         return result;
     }
 
     public bool isVer(char currTurn, int lastX)
     {
-        bool result = boardState[lastX][0] == currTurn
-                        && boardState[lastX][1] == currTurn
-                        && boardState[lastX][2] == currTurn;
+        bool result = true;
+        for (int i = 0; i < BoardSize; i++)
+        {
+            if (boardState[lastX][i] != currTurn)
+            {
+                result = false;
+                break;
+            }
+        }
         if (result)
         {
-            winningPoints[0] = new Point(lastX, 0);
-            winningPoints[1] = new Point(lastX, 1);
-            winningPoints[2] = new Point(lastX, 2);
+            for (int i = 0; i < BoardSize; i++)
+            {
+                winningPoints[i] = new Point(lastX, i);
+            }
         }
         return result;
     }
 
     public bool isDiag1(char currTurn)
     {
-        bool result = boardState[0][2] == currTurn
-                        && boardState[1][1] == currTurn
-                        && boardState[2][0] == currTurn;
+        bool result = true;
+        for (int i = 0; i < BoardSize; i++)
+        {
+            if (boardState[i][BoardSize - 1 - i] != currTurn)
+            {
+                result = false;
+                break;
+            }
+        }
         if (result)
         {
-            winningPoints[0] = new Point(0, 2);
-            winningPoints[1] = new Point(1, 1);
-            winningPoints[2] = new Point(2, 0);
+            for (int i = 0; i < BoardSize; i++)
+            {
+                winningPoints[i] = new Point(i, BoardSize - 1 - i);
+            }
         }
         return result;
     }
 
     public bool isDiag2(char currTurn)
     {
-        bool result = boardState[2][2] == currTurn
-                        && boardState[1][1] == currTurn
-                        && boardState[0][0] == currTurn;
+        bool result = true;
+        for (int i = 0; i < BoardSize; i++)
+        {
+            if (boardState[i][i] != currTurn)
+            {
+                result = false;
+                break;
+            }
+        }
         if (result)
         {
-            winningPoints[0] = new Point(2, 2);
-            winningPoints[1] = new Point(1, 1);
-            winningPoints[2] = new Point(0, 0);
+            for (int i = 0; i < BoardSize; i++)
+            {
+                winningPoints[i] = new Point(i, i);
+            }
         }
         return result;
     }
