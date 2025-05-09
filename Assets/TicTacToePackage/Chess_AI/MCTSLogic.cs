@@ -6,7 +6,7 @@ using UnityEngine;
 public class MCTSLogic
 {
     public int boardSize = 10;
-    public int iterationNumber = 1000;
+    public int iterationNumber = 200;
     public char myTurn = 'O'; // MCTS sẽ đánh "O" khi đấu với MiniMax
 
     // Hàm lấy nước đi tốt nhất cho MCTS

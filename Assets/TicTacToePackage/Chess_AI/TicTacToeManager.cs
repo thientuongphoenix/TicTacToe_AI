@@ -73,6 +73,10 @@ public class TicTacToeManager : MonoBehaviour
         currentMode = GameMode.PlayerVsAI;
         isPlayerTurn = true;
         ResetGame();
+        if (winnerText != null)
+        {
+            winnerText.text = "...";
+        }
     }
 
     public void SetAIVsAIMode()
@@ -81,6 +85,10 @@ public class TicTacToeManager : MonoBehaviour
         isMiniMaxTurn = true; // MiniMax đi trước
         isPlayerTurn = false;
         ResetGame();
+        if (winnerText != null)
+        {
+            winnerText.text = "...";
+        }
         Invoke(nameof(HandleAIMove), 0.5f);
     }
 
@@ -105,7 +113,11 @@ public class TicTacToeManager : MonoBehaviour
         isPlayerTurn = (currentMode == GameMode.PlayerVsAI);
         isMiniMaxTurn = true;
         gameOver = false;
-        // Có thể reset thêm các biến khác nếu cần
+        // Reset text
+        if (winnerText != null)
+        {
+            winnerText.text = "...";
+        }
     }
 
     // Hàm xử lý lượt AI khi ở chế độ AI vs AI
@@ -582,7 +594,14 @@ public class TicTacToeManager : MonoBehaviour
     {
         if (winnerText != null)
         {
-            winnerText.text = winnerName + " Win!";
+            if (winnerName == "Draw" || winnerName == "Deuce")
+            {
+                winnerText.text = "Hòa!";
+            }
+            else
+            {
+                winnerText.text = winnerName + " Thắng!";
+            }
         }
     }
 }
