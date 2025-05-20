@@ -2,6 +2,10 @@
 using System.Diagnostics;
 using System.Collections;
 
+/// <summary>
+/// Điều khiển AI sử dụng thuật toán MCTS để chơi Caro.
+/// Gắn script này vào GameObject AI trong Unity, tự động thực hiện lượt đi cho AI dựa trên trạng thái bàn cờ.
+/// </summary>
 public class MCTSAI : MonoBehaviour
 {
     public static char myTurn = Board.TURN_X;

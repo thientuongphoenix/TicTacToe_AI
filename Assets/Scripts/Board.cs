@@ -2,6 +2,11 @@
 using UnityEngine.UI;
 using System.Collections;
 
+/// <summary>
+/// Quản lý trạng thái, logic và xử lý bàn cờ Caro.
+/// Sử dụng cho cả AI và người chơi, cung cấp các hàm kiểm tra thắng/thua, cập nhật lượt đi, khởi tạo bàn cờ.
+/// Gắn script này vào GameObject đại diện cho bàn cờ trong Unity.
+/// </summary>
 public class Board : MonoBehaviour
 {
     public static int BoardSize = BOARD_SIZE; // Cho phép ghi đè

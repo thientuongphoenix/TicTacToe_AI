@@ -2,7 +2,11 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Lớp logic MCTS thuần túy cho Caro, không phụ thuộc Unity
+/// <summary>
+/// Cung cấp logic thuật toán Monte Carlo Tree Search (MCTS) cho AI Caro.
+/// Dùng để tìm nước đi tối ưu cho AI dựa trên trạng thái bàn cờ.
+/// Có thể sử dụng độc lập hoặc gọi từ các script quản lý game.
+/// </summary>
 public class MCTSLogic
 {
     public int boardSize = 10;

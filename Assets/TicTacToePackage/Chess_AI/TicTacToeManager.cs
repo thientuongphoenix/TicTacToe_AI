@@ -1,4 +1,8 @@
-﻿using NUnit.Framework;
+﻿/// <summary>
+/// Quản lý toàn bộ quá trình chơi Caro: khởi tạo bàn cờ, xử lý lượt đi, kiểm tra thắng/thua, chuyển đổi chế độ chơi (Người vs AI, AI vs AI).
+/// Gắn script này vào GameObject chính của game Caro trong Unity.
+/// </summary>
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;

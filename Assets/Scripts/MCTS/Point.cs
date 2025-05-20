@@ -2,6 +2,10 @@
 using System;
 using System.Collections.Generic;
 
+/// <summary>
+/// Đại diện cho một điểm (tọa độ x, y) trên bàn cờ.
+/// Dùng để xác định vị trí các quân cờ, truyền dữ liệu vị trí giữa các hàm.
+/// </summary>
 public class Point
 {
     public int x { get; set; }

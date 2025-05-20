@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
+/// <summary>
+/// Đại diện cho trạng thái của bàn cờ tại một thời điểm.
+/// Lưu thông tin lượt đi, vị trí quân cờ cuối, số quân đã đánh, phục vụ cho thuật toán AI (MCTS).
+/// </summary>
 public class State
 {
     public char[][] boardState;
